@@ -1,20 +1,43 @@
+import pandas_datareader.data as web
+import datetime
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.dependencies import Input, Output
 
-#function for the first CI step
-def addtwonumbers(int_a, int_b):
-    return int_a + int_b
+app = dash.Dash()
 
-App = dash.Dash()
+app.layout = html.Div(children=[
+    html.Div(children='''
+        Symbol to graph:
+    '''),
+    dcc.Input(id='input', value='', type='text'),
+    html.Div(id='output-graph'),
+])
 
-App.layout = html.Div(children=[html.H1(children='Dash Tutorials'),\
-    dcc.Graph(id='example',\
-        figure={'data': [\
-            {'x': [1, 2, 3, 4, 5], 'y': [9, 6, 9, 9, 9], 'type': 'line', 'name': 'Boats'},\
-            {'x': [1, 2, 3, 4, 5], 'y': [8, 7, 2, 7, 3], 'type': 'bar', 'name': 'Cars'},],\
-                'layout': {'title': 'Basic Dash Example'}})])
+@app.callback(
+    Output(component_id='output-graph', component_property='children'),
+    [Input(component_id='input', component_property='value')]
+)
+def update_value(input_data):
+    start = datetime.datetime(2015, 1, 1)
+    end = datetime.datetime.now()
+    df = web.DataReader(input_data, 'morningstar', start, end)
+    df.reset_index(inplace=True)
+    df.set_index("Date", inplace=True)
+    df = df.drop("Symbol", axis=1)
+
+    return dcc.Graph(
+        id='example-graph',
+        figure={
+            'data': [
+                {'x': df.index, 'y': df.Close, 'type': 'line', 'name': input_data},
+            ],
+            'layout': {
+                'title': input_data
+            }
+        }
+    )
 
 if __name__ == '__main__':
-    App.run_server(debug=True)
-    
+    app.run_server(debug=True)
