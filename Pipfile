@@ -7,7 +7,7 @@ verify_ssl = true
 pylint = "*"
 
 [packages]
-dash = "*"
+dash = {extras = ["testing"],version = "*"}
 dash-renderer = "*"
 dash-html-components = "*"
 dash-core-components = "*"
