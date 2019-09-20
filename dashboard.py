@@ -3,12 +3,12 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 #function for the first CI step
-def addtwonumbers(a,b):
-    return a+b
+def addtwonumbers(int_a, int_b):
+    return int_a + int_b
 
-app = dash.Dash()
+App = dash.Dash()
 
-app.layout = html.Div(children=[html.H1(children='Dash Tutorials'),\
+App.layout = html.Div(children=[html.H1(children='Dash Tutorials'),\
     dcc.Graph(id='example',\
         figure={'data': [\
             {'x': [1, 2, 3, 4, 5], 'y': [9, 6, 9, 9, 9], 'type': 'line', 'name': 'Boats'},\
@@ -16,4 +16,5 @@ app.layout = html.Div(children=[html.H1(children='Dash Tutorials'),\
                 'layout': {'title': 'Basic Dash Example'}})])
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    App.run_server(debug=True)
+    
